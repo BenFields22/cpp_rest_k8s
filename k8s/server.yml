@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cserver 
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cserver
+  template:
+    metadata:
+      labels:
+        app: cserver
+    spec:
+      containers:
+      - name: server-container
+        image: potatofields/cserver:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cserver-endpoint
+  labels:
+    app: cserrver
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30002
+  selector:
+    app: cserver
